@@ -6,14 +6,14 @@ export interface MediaEdge {
       height: number;
       width: number;
     };
-    displayurl: string;
-    displayresources: {
+    display_url: string;
+    display_resources: {
       src: string;
-      configwidth: number;
-      configheight: number;
+      config_width: number;
+      config_height: number;
     }[];
-    isvideo: boolean;
-    edgemediatocaption: {
+    is_video: boolean;
+    edge_media_to_caption: {
       edges: [
         {
           node: {
@@ -22,5 +22,6 @@ export interface MediaEdge {
         },
       ];
     };
+    taken_at_timestamp: number;
   };
 }

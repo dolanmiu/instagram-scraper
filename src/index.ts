@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import axios from 'axios';
-import { MongoClient } from 'mongodb';
+import { MongoClient, Timestamp } from 'mongodb';
 
 import { MediaResponse } from './models/media-response';
 
@@ -24,21 +24,29 @@ const run = async () => {
   const collection = db.collection('openaidalle');
 
   const { data } = await axios.request<MediaResponse>(options);
-  const edges = data.data.user.edgeownertotimelinemedia.edges;
+  console.log(JSON.stringify(data));
+  const edges = data.data.user.edge_owner_to_timeline_media.edges;
 
   const bulk = collection.initializeUnorderedBulkOp();
+
   for (const edge of edges) {
-    bulk.insert({
-      _id: edge.node.id,
-      typename: edge.node.typename,
-      id: edge.node.id,
-      dimensions: edge.node.dimensions,
-      displayurl: edge.node.displayurl,
-      displayresources: edge.node.displayresources,
-      isvideo: edge.node.isvideo,
-      edgemediatocaption: edge.node.edgemediatocaption,
-    });
+    bulk
+      .find({ _id: edge.node.id })
+      .upsert()
+      .replaceOne({
+        _id: edge.node.id,
+        typename: edge.node.typename,
+        id: edge.node.id,
+        dimensions: edge.node.dimensions,
+        displayurl: edge.node.display_url,
+        displayresources: edge.node.display_resources,
+        isvideo: edge.node.is_video,
+        edge_media_to_caption: edge.node.edge_media_to_caption,
+        taken_at_timestamp: edge.node.taken_at_timestamp,
+        ts: Timestamp.fromNumber(edge.node.taken_at_timestamp),
+      });
   }
+
   await bulk.execute();
   await client.close();
 };

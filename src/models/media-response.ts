@@ -3,7 +3,7 @@ import { MediaEdge } from './media-edge';
 export interface MediaResponse {
   data: {
     user: {
-      edgeownertotimelinemedia: {
+      edge_owner_to_timeline_media: {
         count: number;
         pageinfo: {
           hasnextpage: boolean;
