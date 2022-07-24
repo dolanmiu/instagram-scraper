@@ -40,6 +40,7 @@ const run = async () => {
     });
   }
   await bulk.execute();
+  await client.close();
 };
 
 run();
