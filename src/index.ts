@@ -3,6 +3,7 @@ import axios from 'axios';
 import { MongoClient, Timestamp } from 'mongodb';
 
 import { MediaResponse } from './models/media-response';
+import { ImageStoragePayload } from './models/image-storage-payload';
 
 const url = `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_URI}`;
 
@@ -38,13 +39,13 @@ const run = async () => {
         typename: edge.node.typename,
         id: edge.node.id,
         dimensions: edge.node.dimensions,
-        displayurl: edge.node.display_url,
-        displayresources: edge.node.display_resources,
-        isvideo: edge.node.is_video,
+        display_url: edge.node.display_url,
+        display_resources: edge.node.display_resources,
+        is_video: edge.node.is_video,
         edge_media_to_caption: edge.node.edge_media_to_caption,
         taken_at_timestamp: edge.node.taken_at_timestamp,
         ts: Timestamp.fromNumber(edge.node.taken_at_timestamp),
-      });
+      } as ImageStoragePayload);
   }
 
   await bulk.execute();
